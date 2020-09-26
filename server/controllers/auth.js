@@ -11,7 +11,7 @@ sgMail.setApiKey(process.env.MAIL_API_KEY);
 
 exports.signup = (req, res) => {
     const { email } = req.body;
-    User.findOne({ email }, (err, user) => {
+    User.findOne({ email }).exec((err, user) => {
         //check if user exists
         if (err || !user) {
             return res.status(400).json({
