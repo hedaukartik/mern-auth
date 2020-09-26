@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema(
             trim: true,
             required: true,
             unique: 32,
+            lowercase: true,
         },
         email: {
             type: String,
@@ -38,6 +39,10 @@ const userSchema = new mongoose.Schema(
         history: {
             type: Array,
             default: [],
+        },
+        resetPasswordLink: {
+            type: String,
+            default: "",
         },
     },
     {

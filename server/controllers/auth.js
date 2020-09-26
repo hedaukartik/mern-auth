@@ -1,22 +1,46 @@
 const User = require("../models/user");
 const jwt = require("jsonwebtoken"); //to generate signed token
+const _ = require("lodash");
+const { OAuth2Client } = require("google-auth-library");
+const fetch = require("node-fetch");
 const expressJwt = require("express-jwt"); //for authorization cehck
 const { errorHandler } = require("../helpers/dbErrorHandler");
+const sendActivationEmailData = require("../config/sendActivationEmail");
+const sgMail = require("@sendgrid/mail");
+sgMail.setApiKey(process.env.MAIL_API_KEY);
 
 exports.signup = (req, res) => {
-    console.log("req.body", req.body);
-    const user = new User(req.body);
-    user.save((err, user) => {
-        if (err) {
+    const { email } = req.body;
+    User.findOne({ email }, (err, user) => {
+        //check if user exists
+        if (err || !user) {
             return res.status(400).json({
-                err: errorHandler(err),
+                error: "User with that email does not exist. Please signup",
             });
         }
-        user.salt = undefined;
-        user.hashed_password = undefined;
-        res.json({
-            user,
-        });
+        //generate token
+        const token = jwt.sign(
+            { _id: user._id },
+            process.env.JWT_ACCOUNT_ACTIVATION,
+            {
+                expiresIn: "15m",
+            }
+        );
+        //email data sending
+        const emailData = sendActivationEmailData(user, token);
+        //send mail
+        sgMail
+            .send(emailData)
+            .then((sent) => {
+                return res.json({
+                    message: `Email has been sent to ${user.email}`,
+                });
+            })
+            .catch((err) => {
+                return res.status(400).json({
+                    err,
+                });
+            });
     });
 };
 
