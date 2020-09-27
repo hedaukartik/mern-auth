@@ -26,7 +26,6 @@ const SignIn = ({ history }) => {
                 idToken: tokenId,
             })
             .then((res) => {
-                console.log(res.data);
                 informParent(res);
             })
             .catch((error) => {
@@ -48,7 +47,6 @@ const SignIn = ({ history }) => {
                 accessToken,
             })
             .then((res) => {
-                console.log(res.data);
                 informParent(res);
             })
             .catch((error) => {
@@ -56,12 +54,10 @@ const SignIn = ({ history }) => {
             });
     };
     const responseGoogle = (response) => {
-        console.log(response);
         sendGoogleToken(response.tokenId);
     };
 
     const responseFacebook = (response) => {
-        console.log(response);
         sendFacebookToken(response.userID, response.accessToken);
     };
 
@@ -104,7 +100,6 @@ const SignIn = ({ history }) => {
     return (
         <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
             {isAuth() ? <Redirect to="/" /> : null}
-            {console.log(`${process.env.REACT_APP_GOOGLE_CLIENT}`)}
             <ToastContainer />
             <div className="max-w-screen-xl m-0 sm:m-20 bg-white shadow sm:rounded-lg flex justify-center flex-1">
                 <div className="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">

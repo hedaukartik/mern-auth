@@ -7,6 +7,7 @@ const {
     signin,
     signout,
     googleController,
+    facebookController,
     requireSignin,
 } = require("../controllers/auth");
 
@@ -17,6 +18,7 @@ router.post("/activation", activation);
 router.post("/signin", signin);
 router.get("/signout", signout);
 router.post("/googlelogin", googleController);
+router.post("/facebooklogin", facebookController);
 
 router.get("/hello", requireSignin, (req, res) => {
     res.send("Hello There");
