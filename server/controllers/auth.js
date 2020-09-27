@@ -10,30 +10,34 @@ const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.MAIL_API_KEY);
 
 exports.signup = (req, res) => {
-    const { email } = req.body;
+    const { name, email, password } = req.body;
     User.findOne({ email }).exec((err, user) => {
         //check if user exists
-        if (err || !user) {
+        if (user) {
             return res.status(400).json({
-                error: "User with that email does not exist. Please signup",
+                error: "User with that email already exists.",
             });
         }
         //generate token
         const token = jwt.sign(
-            { _id: user._id },
+            {
+                name,
+                email,
+                password,
+            },
             process.env.JWT_ACCOUNT_ACTIVATION,
             {
-                expiresIn: "15m",
+                expiresIn: "5m",
             }
         );
         //email data sending
-        const emailData = sendActivationEmailData(user, token);
+        const emailData = sendActivationEmailData(email, token);
         //send mail
         sgMail
             .send(emailData)
             .then((sent) => {
                 return res.json({
-                    message: `Email has been sent to ${user.email}`,
+                    message: `Email has been sent to ${email}`,
                 });
             })
             .catch((err) => {

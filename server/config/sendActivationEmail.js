@@ -1,7 +1,7 @@
-const sendActivationEmail = (user, token) => {
+const sendActivationEmail = (userEmail, token) => {
     const emailData = {
         from: process.env.EMAIL_FROM,
-        to: user.email,
+        to: userEmail,
         subject: "Account activation link",
         html: `
             <h1>Please Click on link to activate</h1>

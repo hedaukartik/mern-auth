@@ -40,7 +40,7 @@ const SignUp = () => {
                         toast.success(res.data.message);
                     })
                     .catch((err) => {
-                        toast.error(err.response.data.error);
+                        toast.error(err.response);
                     });
             } else {
                 toast.error("Passwords don't match. Please try again!");
