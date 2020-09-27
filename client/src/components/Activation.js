@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 import { isAuth } from "../helpers/auth";
 import { Redirect } from "react-router-dom";
 
-export const Activation = ({ match }) => {
+const Activation = ({ match }) => {
     const [formData, setFormData] = useState({
         name: "",
         token: "",
@@ -101,3 +101,5 @@ export const Activation = ({ match }) => {
         </div>
     );
 };
+
+export default Activation;
