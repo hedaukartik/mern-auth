@@ -42,10 +42,54 @@ exports.signup = (req, res) => {
             })
             .catch((err) => {
                 return res.status(400).json({
-                    err,
+                    success: false,
+                    errors: errorHandler(err),
                 });
             });
     });
+};
+
+exports.activation = (req, res) => {
+    const { token } = req.body;
+    if (token) {
+        //verify the token is valid or not or expired
+        jwt.verify(
+            token,
+            process.env.JWT_ACCOUNT_ACTIVATION,
+            (err, decoded) => {
+                if (err) {
+                    return res.status(401).json({
+                        error: "Expired Token. Signup again.",
+                    });
+                } else {
+                    //if valid save to database
+                    //get name email password from token
+                    const { name, email, password } = jwt.decode(token);
+                    const user = new User({
+                        name,
+                        email,
+                        password,
+                    });
+                    user.save((err, user) => {
+                        if (err) {
+                            return res.status(401).json({
+                                error: errorHandler(err),
+                            });
+                        } else {
+                            return res.status(200).json({
+                                success: true,
+                                message: "Signup success",
+                            });
+                        }
+                    });
+                }
+            }
+        );
+    } else {
+        return res.status(401).json({
+            error: "Something went wrong. Please try again.",
+        });
+    }
 };
 
 exports.signin = (req, res) => {
