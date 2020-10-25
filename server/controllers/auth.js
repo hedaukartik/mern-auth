@@ -113,7 +113,7 @@ exports.signin = (req, res) => {
 			});
 		}
 		//generate a signed token with user id and secret
-		const token = generatedToken;
+		const token = generatedToken(user);
 		// const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
 		//     expiresIn: "7d", //token valid for 7days and you can set remember me in front and set it for 30days
 		// });
@@ -142,7 +142,7 @@ exports.googleController = (req, res) => {
 			if (email_verified) {
 				User.findOne({ email }).exec((err, user) => {
 					if (user) {
-						const token = generatedToken;
+						const token = generatedToken(user);
 						const { _id, email, name, role } = user;
 						return res.json({
 							token,
@@ -161,7 +161,7 @@ exports.googleController = (req, res) => {
 									error: "User signup failed with google",
 								});
 							}
-							const token = generatedToken;
+							const token = generatedToken(user);
 							const { _id, email, name, role } = data;
 							return res.json({
 								token,
@@ -194,7 +194,7 @@ exports.facebookController = (req, res) => {
 				const { email, name } = response;
 				User.findOne({ email }).exec((err, user) => {
 					if (user) {
-						const token = generatedToken;
+						const token = generatedToken(user);
 						const { _id, email, name, role } = user;
 						return res.json({
 							token,
@@ -213,7 +213,7 @@ exports.facebookController = (req, res) => {
 									error: "User signup failed with facebook",
 								});
 							}
-							const token = generatedToken;
+							const token = generatedToken(user);
 							const { _id, email, name, role } = data;
 							return res.json({
 								token,
